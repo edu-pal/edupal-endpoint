@@ -1,0 +1,35 @@
+extend type Mutation {
+  # /ask
+
+  sendQuestion(input: QuestionInput!): Question! @aws_api_key
+}
+
+extend type Subscription {
+  showQuestion(meetingId: ID!): Question
+    @aws_subscribe(mutations: ["sendQuestion"])
+}
+
+input QuestionInput {
+  classId: ID!
+  meetingId: ID!
+  user: UserInput!
+  type: QuestionType!
+  image: String
+  text: String
+  options: OptionsInput!
+  answer: AnswerInput
+}
+
+type Question @aws_api_key {
+  questionId: ID!
+  questionDateTime: AWSDateTime!
+  numStudents: Int!
+  classId: ID!
+  meetingId: ID!
+  user: User!
+  type: QuestionType!
+  image: String
+  text: String
+  options: Options!
+  answer: Answer
+}

@@ -1,0 +1,33 @@
+type Query
+type Mutation
+type Subscription
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+input UserInput {
+  name: String!
+  id: ID!
+  avatar: AWSURL
+  role: Role!
+}
+
+type User {
+  name: String!
+  id: ID!
+  avatar: AWSURL
+  role: Role!
+}
+
+enum Promise {
+  PENDING
+  APPROVED
+  REJECTED
+}

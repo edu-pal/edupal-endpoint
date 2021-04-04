@@ -1,0 +1,38 @@
+service: realtime-api
+
+functions: ${file(resources/functions.yml)}
+
+resources:
+  - ${file(resources/roles.yml)}
+  - ${file(resources/appsync.yml)}
+  - ${file(resources/databaseAppsync.yml)}
+
+custom:
+  appsyncId: ${file(resources/variableResolver.js):appSyncId${self:provider.stage}}
+  output:
+    file: ./stack.${self:provider.stage}.json
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+plugins:
+  - serverless-stack-output
+  - serverless-pseudo-parameters
+  - serverless-webpack
+
+provider:
+  name: aws
+  region: ap-southeast-1
+  runtime: nodejs14.x
+  stage: dev
+  lambdaHashingVersion: '20201221'
+  versionFunctions: false
+  endpointType: regional
+  tags:
+    project: edupal
+    service: ${self:service}
+    component: cloudformation
+  environment:
+    REALTIME_TABLE_NAME:
+      Fn::ImportValue: RealtimeTableEdupal
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'

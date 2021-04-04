@@ -1,0 +1,33 @@
+extend type Mutation {
+  # /respond
+
+  sendResponse(input: ResponseInput!): Response! @aws_api_key
+}
+
+extend type Subscription {
+  showResponse(meetingId: ID!): Response
+    @aws_subscribe(mutations: ["sendResponse"])
+}
+
+input ResponseInput {
+  classId: ID!
+  meetingId: ID!
+  answerer: UserInput!
+  questionDateTime: AWSDateTime!
+  questionId: ID!
+  type: QuestionType!
+  answer: AnswerInput
+  theirAnswer: AnswerInput!
+}
+
+type Response @aws_api_key {
+  respondDateTime: AWSDateTime!
+  isCorrect: Boolean
+  coinsEarned: Int!
+  meetingId: ID!
+  answerer: User!
+  questionDateTime: AWSDateTime!
+  questionId: ID!
+  type: QuestionType!
+  theirAnswer: Answer!
+}

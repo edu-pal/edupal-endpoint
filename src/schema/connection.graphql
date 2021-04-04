@@ -1,0 +1,12 @@
+# extend type Query {
+#   ping: String!
+# }
+
+# extend type Mutation {
+#   joinClass(classId: ID!, user: UserInput!): ID!
+#   setClass(classId: ID!, user: UserInput!): ID!
+# }
+
+# extend type Subscription {
+#   changeClass(meetingId: ID!): ID @aws_subscribe(mutations: ["setClass"])
+# }

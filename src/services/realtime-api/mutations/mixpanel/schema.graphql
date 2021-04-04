@@ -1,0 +1,9 @@
+extend type Mutation {
+  mixpanel(action: Action!, event: String!, properties: AWSJSON!): Int!
+    @aws_api_key
+}
+
+enum Action {
+  TRACK
+  PEOPLE
+}

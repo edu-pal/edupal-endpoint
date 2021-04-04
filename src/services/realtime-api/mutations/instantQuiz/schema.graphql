@@ -1,0 +1,27 @@
+enum QuestionType {
+  MCQ
+  TrueFalse
+  ShortAnswer
+}
+
+input AnswerInput {
+  MCQ: [Boolean!]
+  TrueFalse: Boolean
+  ShortAnswer: String
+}
+
+input OptionsInput {
+  MCQ: [String]
+  TrueFalse: [Boolean!]
+}
+
+type Answer @aws_api_key {
+  MCQ: [Boolean!]
+  TrueFalse: Boolean
+  ShortAnswer: String
+}
+
+type Options @aws_api_key {
+  MCQ: [String]
+  TrueFalse: [Boolean!]
+}

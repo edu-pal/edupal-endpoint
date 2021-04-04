@@ -1,0 +1,11 @@
+extend type Query {
+  getLeaderboard(meetingId: ID!, user: UserInput!): [Leaderboard]! @aws_api_key
+}
+
+type Leaderboard @aws_api_key {
+  user: User!
+  coinTotal: Int!
+  correctStreak: Int!
+  coinChange: Int!
+  leaderboardPosition: Int!
+}

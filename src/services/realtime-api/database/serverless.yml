@@ -1,0 +1,107 @@
+service: realtime-database
+
+resources:
+  Description: Realtime DynamoDB Table for Edu-pal GraphQL API
+  Resources:
+    RealtimeTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: ${self:custom.${self:provider.stage}.deletionPolicy}
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-0.3.0
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: classId
+            AttributeType: S
+          - AttributeName: coinTotal
+            AttributeType: N
+        GlobalSecondaryIndexes:
+          - IndexName: ClassIndex
+            KeySchema:
+              - AttributeName: classId
+                KeyType: HASH
+              - AttributeName: sk
+                KeyType: RANGE
+            Projection:
+              NonKeyAttributes:
+                - pk
+                - response
+                - question
+                - teacher
+                - coinTotal
+                - user
+                - game
+              ProjectionType: INCLUDE
+          - IndexName: LeaderboardIndex
+            KeySchema:
+              - AttributeName: pk
+                KeyType: HASH
+              - AttributeName: coinTotal
+                KeyType: RANGE
+            Projection:
+              NonKeyAttributes:
+                - sk
+                - classId
+                - user
+                - game
+              ProjectionType: INCLUDE
+          - IndexName: ReverseIndex
+            KeySchema:
+              - AttributeName: sk
+                KeyType: HASH
+              - AttributeName: pk
+                KeyType: RANGE
+            Projection:
+              NonKeyAttributes:
+                - classId
+                - coinTotal
+                - user
+                - game
+              ProjectionType: INCLUDE
+        Tags:
+          - Key: project
+            Value: edupal
+          - Key: service
+            Value: ${self:service}
+        BillingMode: PAY_PER_REQUEST
+  Outputs:
+    RealtimeTable:
+      Value:
+        Ref: RealtimeTable
+      Export:
+        Name: RealtimeTableEdupal
+    RealtimeTableArn:
+      Value:
+        Fn::GetAtt: ['RealtimeTable', 'Arn']
+      Export:
+        Name: RealtimeTableArnEdupal
+    Region:
+      Value: ${self:provider.region}
+
+provider:
+  name: aws
+  region: ap-southeast-1
+  stage: dev
+  lambdaHashingVersion: '20201221'
+  tags:
+    project: edupal
+    service: ${self:service}
+    component: cloudformation
+
+custom:
+  dev:
+    deletionPolicy: Delete
+  prod:
+    deletionPolicy: Retain
+  output:
+    file: ./stack.${self:provider.stage}.json
+
+plugins:
+  - serverless-stack-output

@@ -1,0 +1,8 @@
+extend type Mutation {
+  joinMeeting(meetingId: ID!, user: UserInput!): NewParticipant! @aws_api_key
+}
+
+type NewParticipant @aws_api_key {
+  role: Role!
+  classId: ID!
+}

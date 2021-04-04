@@ -1,0 +1,24 @@
+extend type Mutation {
+  roleResponse(input: RoleResponseInput!): RoleResponse! @aws_api_key
+}
+
+extend type Subscription {
+  showRoleResponse(meetingId: ID!): RoleResponse
+    @aws_subscribe(mutations: ["roleResponse"])
+}
+
+input RoleResponseInput {
+  meetingId: ID!
+  newRole: Role!
+  requestee: UserInput!
+  status: Promise!
+  judge: UserInput!
+}
+
+type RoleResponse @aws_api_key {
+  meetingId: ID!
+  newRole: Role!
+  requestee: User!
+  status: Promise!
+  judge: User!
+}
